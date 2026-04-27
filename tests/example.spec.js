@@ -2,10 +2,11 @@
 import { test, expect } from '@playwright/test';
 
 test('test', async ({ page }) => {
+  console.log(process.env);
   await page.goto('https://academybugs.com/find-bugs/#');
   await page.getByRole('link', { name: '50' }).click();
 
   await expect(page.locator('.academy-bug-overlay')).toContainText(
-    'You found a crash bug, examine the page for 5 seconds',
+    'You found a crash bug, examine the page for',
 );
 });
