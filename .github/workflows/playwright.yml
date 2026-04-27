@@ -6,6 +6,12 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+    workflow_dispatch:
+      inputs:
+        Baseurl:
+          description: 'this is URL for tests'
+          required: true
+          default: 'https://academybugs.com/find-bugs/#'
 jobs:
   test:
     timeout-minutes: 60
@@ -32,7 +38,9 @@ jobs:
     
     - name: Run Playwright tests
       run: npx playwright test
-      
+      env:
+        Username: ${{secrets.USERNAME}}
+        Baseurl: ${{vars.BASEURL}}
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
