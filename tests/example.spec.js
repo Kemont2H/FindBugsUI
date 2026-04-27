@@ -7,15 +7,15 @@ test('test', async ({ page }) => {
 	console.log(process.env.QualityGates);
 	// Переменная на уровне job
 	console.log(process.env.Integration);
-	// TypeOfTests мы не сможни увидеть, она хранится в другом шаге
+	// TypeOfTests мы не сможем увидеть, она хранится в другом шаге
 
 	//
 	console.log(process.env.Username);
 	console.log(process.env.Baseurl);
 
-	await page.goto('.');
+	await page.goto('https://academybugs.com/find-bugs/#');
 	await page.getByRole('link', { name: '50' }).click();
 	await expect(page.locator('.academy-bug-overlay')).toContainText(
-		'You found a crash bug, examine the page for',
+		'You found a crash bug, examine the page by clicking on any button for 5 seconds.',
 	);
 });
