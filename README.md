@@ -1,1 +1,2 @@
 # FindBugsUI
+https://academybugs.com/
