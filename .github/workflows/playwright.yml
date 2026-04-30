@@ -1,49 +1,70 @@
-name: Playwright Tests
-env:
-  qualityGates: 1
+# .github/workflows/playwright.yml
+name: Playwright Tests with Allure Report
+
+# Когда запускается workflow
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master ]     # При пуше в main
   pull_request:
-    branches: [ main, master ]
-    workflow_dispatch:
-      inputs:
-        Baseurl:
-          description: 'this is URL for tests'
-          required: true
-          default: 'https://academybugs.com/find-bugs/#'
+    branches: [ main, master ]     # При создании PR
+  workflow_dispatch:                # Можно запустить вручную из GitHub UI
+
+# Права для деплоя на GitHub Pages
+permissions:
+  contents: write
+  pages: write
+  actions: read
+
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    env:
-      Integration: API
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
     
-
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
     - name: Install dependencies
       run: npm ci
-    
-    - name: This is demo step, please delete
-      run: echo "Мы проходим ворота качества. $QualityGates  Вид тестирования $Integration , Тип тестирования $TypeofTests"
-      env:
-        TypeofTests: Sanity
-    
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    
-    - name: Run Playwright tests
+      
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps chromium
+      
+    - name: Run Playwright tests with Allure
       run: npx playwright test
-      env:
-        Username: ${{secrets.USERNAME}}
-        Baseurl: ${{vars.BASEURL}}
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
+      continue-on-error: true  # Продолжаем даже если тесты упали (мы же ищем баги)
+      
+    - name: Generate Allure Report
+      if: always()  # Генерируем отчёт даже при падении тестов
+      run: npx allure generate allure-results --clean -o allure-report
+      
+    - name: Upload Allure Results as Artifact
+      if: always()
+      uses: actions/upload-artifact@v4
       with:
-        name: playwright-report
-        path: playwright-report/
+        name: allure-results
+        path: allure-results
         retention-days: 30
+        
+    - name: Upload Allure Report as Artifact
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: allure-report
+        path: allure-report
+        retention-days: 30
+        
+    - name: Deploy Allure Report to GitHub Pages
+      if: github.ref == 'refs/heads/main'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./allure-report
+        destination_dir: .
+        keep_files: true  # Сохраняем историю отчётов

@@ -4,7 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-     "test": "npx playwright test"
+    "test": "npx playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:bug1": "playwright test tests/bug1-locked-user.spec.js",
+    "test:bug2": "playwright test tests/bug2-problem-user-images.spec.js",
+    "test:bug3": "playwright test tests/bug3-slow-user.spec.js",
+    "test:bug4": "playwright test tests/bug4-cart-badge.spec.js",
+    "test:bug5": "playwright test tests/bug5-sorting.spec.js",
+    "allure:generate": "allure generate allure-results --clean -o allure-report",
+    "allure:open": "allure open allure-report",
+    "allure:clear": "rm -rf allure-results allure-report",
+    "ci:run": "npm run test && npm run allure:generate"
   },
   "repository": {
     "type": "git",
@@ -19,6 +30,8 @@
   "homepage": "https://github.com/Kemont2H/FindBugsUI#readme",
   "devDependencies": {
     "@playwright/test": "^1.59.1",
-    "@types/node": "^25.6.0"
+    "@types/node": "^25.6.0",
+    "allure-commandline": "^2.38.1",
+    "allure-playwright": "^3.7.1"
   }
 }
