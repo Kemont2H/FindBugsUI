@@ -1,0 +1,21 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"
+            Given я добавил товар в корзину
+            When я удаляю этот товар из корзины
+            Then бейдж счётчика должен исчезнуть
+            BUT бейдж всё ещё показывает 1
+        ","6567","Cart badge should disappear after removing last item","chromium","2026-04-30","failed","2026-04-30","Bug #4: Cart badge not updating","bug4-cart-badge.spec.js","",""
+"","722","Locked out user should see error message","chromium","2026-04-30","passed","2026-04-30","Bug #1: Locked user authentication","bug1-locked-user.spec.js","",""
+"","1251","Problem user should see correctly sorted items (Z to A)","chromium","2026-04-30","failed","2026-04-30","Bug #5: Sorting malfunction","bug5-sorting.spec.js","",""
+"
+            Given я захожу как problem_user
+            When открывается страница с товарами
+            Then каждый товар должен иметь свою уникальную картинку
+            BUT все картинки одинаковые
+        ","736","Problem user should see unique product images","chromium","2026-04-30","failed","2026-04-30","Bug #2: Duplicate product images","bug2-problem-user-images.spec.js","",""
+"
+                Given я пытаюсь войти как performance_glitch_user
+                When нажимаю кнопку Login
+                Then страница должна загрузиться за приемлемое время (< 3 сек)
+                BUT загрузка происходит очень медленно (> 5 сек)
+            ","5950","Performance glitch user should load pages within acceptable time","chromium","2026-04-30","failed","2026-04-30","Bug #3: Performance glitch user","bug3-slow-user.spec.js","",""
